@@ -1,0 +1,57 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao' // apply plugin
+
+android {
+    compileSdkVersion rootProject.ext.android["compileSdkVersion"]
+    buildToolsVersion rootProject.ext.android["buildToolsVersion"]
+    defaultConfig {
+        applicationId "com.lemuel.ganamrs"
+        minSdkVersion rootProject.ext.android["minSdkVersion"]
+        targetSdkVersion rootProject.ext.android["targetSdkVersion"]
+        versionCode rootProject.ext.android["versionCode"]
+        versionName rootProject.ext.android["versionName"]
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    greendao {
+        schemaVersion 1//数据库版本号
+        daoPackage 'com.lemuel.ganamrs.greendao'//设置DaoMaster、DaoSession、Dao包名
+        targetGenDir 'src/main/java'//设置DaoMaster、DaoSession、Dao目录
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile rootProject.ext.dependencies["appcompat-v7"]
+    annotationProcessor(rootProject.ext.dependencies["butterknife-compiler"])
+    annotationProcessor rootProject.ext.dependencies["dagger2-compiler"]
+    provided rootProject.ext.dependencies["javax.annotation"]
+    compile rootProject.ext.dependencies["cardview-v7"]
+
+    //底部导航
+    // greenDao
+    //仿探探
+    compile 'me.jessyan:arms:2.1.5'
+    compile 'org.greenrobot:greendao:3.2.2'
+    compile 'com.roughike:bottom-bar:2.3.1'
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
+    compile 'org.greenrobot:greendao:3.2.2'
+    compile 'me.yuqirong:cardswipelayout:1.0.0'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support:support-vector-drawable:25.3.1'
+    testCompile 'junit:junit:4.12'
+    compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.2'
+    compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.2'
+    //If you use the special Header
+    compile 'com.facebook.fresco:fresco:1.4.0'
+}

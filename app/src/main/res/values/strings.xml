@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Ganamrs</string>
+    <string name="title_activity_main2">GankGrils</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_gank">GankActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+</resources>
