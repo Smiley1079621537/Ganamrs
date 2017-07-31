@@ -1,10 +1,12 @@
 package com.lemuel.ganamrs.entity;
 
 import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
 
 @Entity
 public class GankGril {
+    @Id
     private String _id;
     private String createdAt;
     private String desc;
@@ -84,5 +86,6 @@ public class GankGril {
     public void setWho(String who) {
         this.who = who;
     }
+
 }
 

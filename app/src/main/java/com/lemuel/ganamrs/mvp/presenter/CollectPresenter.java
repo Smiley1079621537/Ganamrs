@@ -6,7 +6,11 @@ import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.widget.imageloader.ImageLoader;
+import com.lemuel.ganamrs.AdoreCallback;
+import com.lemuel.ganamrs.entity.GankGril;
 import com.lemuel.ganamrs.mvp.contract.CollectContract;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -40,4 +44,24 @@ public class CollectPresenter extends BasePresenter<CollectContract.Model, Colle
         this.mApplication = null;
     }
 
+    public void removeThisGril(GankGril gril) {
+        mModel.removeThisGril(gril);
+
+    }
+
+    public void getAllGrils() {
+        mModel.getAllGrils(new AdoreCallback<List<GankGril>>() {
+            @Override
+            public void onSuccess(List<GankGril> gankGrils) {
+                mRootView.loadGrils(gankGrils);
+                mRootView.hideLoading();
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                mRootView.hideLoading();
+                mRootView.showEmpty();
+            }
+        });
+    }
 }

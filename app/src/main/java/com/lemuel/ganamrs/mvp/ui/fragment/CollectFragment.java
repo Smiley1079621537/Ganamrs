@@ -10,10 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.jess.arms.base.BaseFragment;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.UiUtils;
-import com.lemuel.ganamrs.App;
 import com.lemuel.ganamrs.R;
 import com.lemuel.ganamrs.di.component.DaggerCollectComponent;
 import com.lemuel.ganamrs.di.module.CollectModule;
@@ -22,7 +22,7 @@ import com.lemuel.ganamrs.mvp.contract.CollectContract;
 import com.lemuel.ganamrs.mvp.presenter.CollectPresenter;
 import com.lemuel.ganamrs.mvp.ui.adapter.CollectAdapter;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -30,7 +30,7 @@ import butterknife.BindView;
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 
-public class CollectFragment extends BaseFragment<CollectPresenter> implements CollectContract.View, SwipeRefreshLayout.OnRefreshListener {
+public class CollectFragment extends BaseFragment<CollectPresenter> implements CollectContract.View, SwipeRefreshLayout.OnRefreshListener, BaseQuickAdapter.OnItemLongClickListener {
 
 
     @BindView(R.id.recyclerView)
@@ -38,6 +38,7 @@ public class CollectFragment extends BaseFragment<CollectPresenter> implements C
     @BindView(R.id.refreshLayout)
     SwipeRefreshLayout mRefreshLayout;
     private CollectAdapter mAdapter;
+    private List<GankGril> mGankGrils;
 
     public static CollectFragment newInstance() {
         CollectFragment fragment = new CollectFragment();
@@ -62,24 +63,15 @@ public class CollectFragment extends BaseFragment<CollectPresenter> implements C
     @Override
     public void initData(Bundle savedInstanceState) {
         mRefreshLayout.setOnRefreshListener(this);
-        List<GankGril> gankGrils = App.getDaoSession().getGankGrilDao().loadAll();
-        Collections.reverse(gankGrils);
-        UiUtils.configRecycleView(mRecyclerView, new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        mAdapter = new CollectAdapter(gankGrils);
+        UiUtils.configRecycleView(mRecyclerView,
+                new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        mAdapter = new CollectAdapter(null);
         mRecyclerView.setAdapter(mAdapter);
+        mAdapter.bindToRecyclerView(mRecyclerView);
+        mAdapter.setEmptyView(R.layout.layout_empty);
+        mAdapter.setOnItemLongClickListener(this);
+        mPresenter.getAllGrils();
     }
-
-    /**
-     * 此方法是让外部调用使fragment做一些操作的,比如说外部的activity想让fragment对象执行一些方法,
-     * 建议在有多个需要让外界调用的方法时,统一传Message,通过what字段,来区分不同的方法,在setData
-     * 方法中就可以switch做不同的操作,这样就可以用统一的入口方法做不同的事
-     * <p>
-     * 使用此方法时请注意调用时fragment的生命周期,如果调用此setData方法时onCreate还没执行
-     * setData里却调用了presenter的方法时,是会报空的,因为dagger注入是在onCreated方法中执行的,然后才创建的presenter
-     * 如果要做一些初始化操作,可以不必让外部调setData,在initData中初始化就可以了
-     *
-     * @param data
-     */
 
     @Override
     public void setData(Object data) {
@@ -100,7 +92,6 @@ public class CollectFragment extends BaseFragment<CollectPresenter> implements C
     @Override
     public void showMessage(@NonNull String message) {
         checkNotNull(message);
-        UiUtils.snackbarText(message);
     }
 
     @Override
@@ -116,13 +107,29 @@ public class CollectFragment extends BaseFragment<CollectPresenter> implements C
 
     @Override
     public void onRefresh() {
-        List<GankGril> gankGrils = App.getDaoSession().getGankGrilDao().loadAll();
-        Collections.reverse(gankGrils);
-        mAdapter.setNewData(gankGrils);
-        hideLoading();
+        mPresenter.getAllGrils();
     }
 
     public void setRefresh() {
+        onRefresh();
+    }
 
+    @Override
+    public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+        mPresenter.removeThisGril(mGankGrils.get(position));
+        onRefresh();
+        return false;
+    }
+
+    @Override
+    public void loadGrils(List<GankGril> gankGrils) {
+        mGankGrils = gankGrils;
+        mAdapter.setNewData(mGankGrils);
+    }
+
+    @Override
+    public void showEmpty() {
+        mGankGrils = new ArrayList<>();
+        mAdapter.setNewData(null);
     }
 }

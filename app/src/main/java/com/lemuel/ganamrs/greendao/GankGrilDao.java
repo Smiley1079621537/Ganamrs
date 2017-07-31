@@ -15,7 +15,7 @@ import com.lemuel.ganamrs.entity.GankGril;
 /** 
  * DAO for table "GANK_GRIL".
 */
-public class GankGrilDao extends AbstractDao<GankGril, Void> {
+public class GankGrilDao extends AbstractDao<GankGril, String> {
 
     public static final String TABLENAME = "GANK_GRIL";
 
@@ -24,7 +24,7 @@ public class GankGrilDao extends AbstractDao<GankGril, Void> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property _id = new Property(0, String.class, "_id", false, "_ID");
+        public final static Property _id = new Property(0, String.class, "_id", true, "_ID");
         public final static Property CreatedAt = new Property(1, String.class, "createdAt", false, "CREATED_AT");
         public final static Property Desc = new Property(2, String.class, "desc", false, "DESC");
         public final static Property PublishedAt = new Property(3, String.class, "publishedAt", false, "PUBLISHED_AT");
@@ -48,7 +48,7 @@ public class GankGrilDao extends AbstractDao<GankGril, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"GANK_GRIL\" (" + //
-                "\"_ID\" TEXT," + // 0: _id
+                "\"_ID\" TEXT PRIMARY KEY NOT NULL ," + // 0: _id
                 "\"CREATED_AT\" TEXT," + // 1: createdAt
                 "\"DESC\" TEXT," + // 2: desc
                 "\"PUBLISHED_AT\" TEXT," + // 3: publishedAt
@@ -158,8 +158,8 @@ public class GankGrilDao extends AbstractDao<GankGril, Void> {
     }
 
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public String readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0);
     }    
 
     @Override
@@ -192,20 +192,22 @@ public class GankGrilDao extends AbstractDao<GankGril, Void> {
      }
     
     @Override
-    protected final Void updateKeyAfterInsert(GankGril entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected final String updateKeyAfterInsert(GankGril entity, long rowId) {
+        return entity.get_id();
     }
     
     @Override
-    public Void getKey(GankGril entity) {
-        return null;
+    public String getKey(GankGril entity) {
+        if(entity != null) {
+            return entity.get_id();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean hasKey(GankGril entity) {
-        // TODO
-        return false;
+        return entity.get_id() != null;
     }
 
     @Override
