@@ -11,7 +11,6 @@ import android.util.Log;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -79,29 +78,12 @@ public class DetailActivity extends BaseActivity<DetailPresenter> implements Det
         }
         mCollapsingToolbar.setTitleEnabled(true);
         mCollapsingToolbar.setTitle(getString(R.string.app_name));
-        initWebView1();
+        initWebView();
         mPresenter.getRandomGril();
-
     }
 
-    private void initWebView() {
-        WebSettings settings = mWebview.getSettings();
-        settings.setUseWideViewPort(true);
-        settings.setLoadWithOverviewMode(true);
-        settings.setSupportZoom(true);
-        settings.setBuiltInZoomControls(true);
-        settings.setDisplayZoomControls(false);
-        mWebview.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                return true;
-            }
-        });
-        mWebview.loadUrl(mGankBean.getUrl());
-    }
-
-    public void initWebView1() {
-        mWebview.getSettings().setJavaScriptEnabled(true);
+    public void initWebView() {
+        //mWebview.getSettings().setJavaScriptEnabled(true);
         mWebview.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
         // 建议缓存策略为，判断是否有网络，有的话，使用LOAD_DEFAULT,无网络时，使用LOAD_CACHE_ELSE_NETWORK
 
@@ -119,15 +101,11 @@ public class DetailActivity extends BaseActivity<DetailPresenter> implements Det
         mWebview.getSettings().setAppCachePath(cacheDirPath);
         // 开启Application Cache功能
         mWebview.getSettings().setAppCacheEnabled(true);
-
         Log.i("databasepath", mWebview.getSettings().getDatabasePath());
-
-
         mWebview.setWebViewClient(new WebViewClient() {
             @Override
             public void onLoadResource(WebView view, String url) {
                 Log.i(TAG, "onLoadResource url=" + url);
-
                 super.onLoadResource(view, url);
             }
 
@@ -165,7 +143,6 @@ public class DetailActivity extends BaseActivity<DetailPresenter> implements Det
             public boolean onJsAlert(WebView view, String url, String message,
                                      JsResult result) {
                 Log.e(TAG, "onJsAlert " + message);
-
                 Toast.makeText(getApplicationContext(), message,
                         Toast.LENGTH_SHORT).show();
                 result.confirm();
@@ -190,12 +167,9 @@ public class DetailActivity extends BaseActivity<DetailPresenter> implements Det
         mWebview.loadUrl(mGankBean.getUrl());
     }
 
-
-    
-
     @Override
     public void showLoading() {
-
+        Toast.makeText(this, "smile:)", Toast.LENGTH_SHORT).show();
     }
 
     @Override

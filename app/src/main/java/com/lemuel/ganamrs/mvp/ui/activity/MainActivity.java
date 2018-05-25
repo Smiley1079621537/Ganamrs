@@ -20,6 +20,7 @@ import com.lemuel.ganamrs.mvp.contract.MainContract;
 import com.lemuel.ganamrs.mvp.presenter.MainPresenter;
 import com.lemuel.ganamrs.mvp.ui.fragment.CollectFragment;
 import com.lemuel.ganamrs.mvp.ui.fragment.GankGrilsFragment;
+import com.lemuel.ganamrs.mvp.ui.fragment.GospelFragment;
 import com.lemuel.ganamrs.mvp.ui.fragment.HomeFragment;
 import com.lemuel.ganamrs.utils.FragmentUtils;
 
@@ -68,6 +69,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
         mFragments.add(HomeFragment.newInstance());
         mFragments.add(GankGrilsFragment.newInstance());
         mFragments.add(mCollectFragment);
+        mFragments.add(GospelFragment.newInstance());
         FragmentUtils.addFragments(getSupportFragmentManager(), mFragments, R.id.content, 0);
     }
 
@@ -118,6 +120,10 @@ public class MainActivity extends BaseActivity<MainPresenter>
                 mReplace = 2;
                 mToolbarTitle.setText(R.string.title_notifications);
                 mCollectFragment.setRefresh();
+                break;
+            case R.id.navigation_gospel:
+                mReplace = 3;
+                mToolbarTitle.setText(R.string.title_gospel);
                 break;
         }
         FragmentUtils.hideAllShowFragment(mFragments.get(mReplace));

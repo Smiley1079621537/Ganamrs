@@ -18,6 +18,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            signingConfig signingConfigs.debug
+            ext.alwaysUpdateBuildId = false
+        }
     }
 
     greendao {
@@ -54,4 +58,5 @@ dependencies {
     compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.2'
     //If you use the special Header
     compile 'com.facebook.fresco:fresco:1.4.0'
+    compile 'org.jsoup:jsoup:1.10.3'
 }
